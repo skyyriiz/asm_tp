@@ -1,21 +1,21 @@
 global _start
 
 section .data
-    message db "13",10
+    message db "1337",10
 
 section .text
     global _start
 
 _start:
     ; afficher 1337
-    mov eax, 4
-    mov ebx, 1
-    mov ecx, message
-    mov edx, 4
-    int 0x80
+    mov eax, 4 ; sys_write
+    mov ebx, 1 ; stdout
+    mov ecx, message ; message
+    mov edx, 5 ; taille du message
+    int 0x80 
 
     ; exit 0
-    mov eax, 1
-    mov ebx, 0
+    mov eax, 1 ; sys_exit
+    mov ebx, 0 ; code de sortie
     int 0x80
     
