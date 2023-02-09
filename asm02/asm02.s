@@ -1,7 +1,7 @@
 global _start
 
 section .data
-    msg: db "Entrez la valeur: ",10,0
+    msg: db "Entrez une valeur:",10
     format db "%d",0
 
 section .bss
@@ -10,24 +10,46 @@ section .bss
 section .text
 
 _start:
-    mov rdi, msg
-    mov rax, 0
+    ; Print message
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, msg
+    mov edx, 20
+    int 0x80
 
-    mov rdi, format
-    mov rsi, x
-    mov rax, 0
-    call scanf
+    ; Enter value
+    mov eax, 3
+    mov ebx, 0
+    mov ecx, x
+    mov edx, 3
+    int 0x80
 
-    cmp rsi, rdi
+    ; Print value
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, x
+    mov edx, 5
+    int 0x80
+
+    mov al, x[0]
+    mov ah, x[1]
+
+    cmp ecx, 42
     je ok
     jne end
 
 ok:
-    mov al, 1
-    mov bl, 0
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, 1337
+    mov edx, 5
+    int 0x80
+
+    mov eax, 1 ; sys_exit
+    mov ebx, 0 ; code de sortie
     int 0x80
 
 end:
-    mov al, 1
-    mov bl, 1
+    mov eax, 1 ; sys_exit
+    mov ebx, 1 ; code de sortie
     int 0x80
