@@ -1,8 +1,8 @@
 # Get name of the folder for the compilation
 name="${PWD##*/}"
 
-nasm -f elf64 -g -o $name.o $name.s
-ld -s -o $name $name.o
-./$name 
+nasm -f elf32 -g -o $name.o $name.s
+ld -m elf_i386 -o $name $name.o
+./$name 3 4
 
 
