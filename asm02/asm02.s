@@ -54,9 +54,9 @@ ok:
     mov edx, 4
     int 0x80
 
-    mov eax, 0
-    mov ebx, 0
-    int 0x80
+    mov eax, 0        
+    mov ebx, 0        
+    int 0x80  
     
 end:
     mov eax, 1 ; sys_exit
