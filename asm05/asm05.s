@@ -1,68 +1,113 @@
 section .data
-    sum_msg db 'La somme est : ', 0
-
+    const10:    dd 10
+    
 section .bss
-    num1 resb 4
-    num2 resb 4
-    sum resb 4
+    input1 resd 1 ;
+    num1 resd 1 ;
+    num2 resd 1 ;
+    num3 resd 1 ;
+
+global _start
 
 section .text
-    global _start
-
 _start:
-    ; récupérer le premier argument
-    mov eax, [esp+4]
-    add eax, 2
-    mov ebx, eax
-    mov eax, 3
-    mov ecx, num1
-    mov edx, 4
-    int 0x80
+    mov eax , [esp+8]      
+    
+    xor edx, edx
+    mov esi, eax         
+    xor ebx, ebx
 
-    ; récupérer le deuxième argument
-    add ebx, 2
-    mov eax, 3
-    mov ecx, num2
-    mov edx, 4
-    int 0x80
+convert:
+    mov bl, [esi]        
+    cmp bl, 0            
+    je v2   
+    sub bl, 48           
+    imul edx, 10         
+    add edx, ebx         
+    inc esi              
+    jmp convert   
 
-    ; convertir les arguments en entiers
+
+v2:
+	xor edi,edi
+	mov edi, edx
+	
+    mov ebx , [esp+12]      ;
+    
+    xor edx, edx
+    mov esi, ebx         
+    xor ebx, ebx
+
+convert2:
+    mov bl, [esi]        
+    cmp bl, 0            
+    je addition   
+    sub bl, 48           
+    imul edx, 10         
+    add edx, ebx         
+    inc esi              
+    jmp convert2   
+
+addition:
+    add edx, edi
+    mov eax, edx
+    
+    
+    xor ebx,ebx
+    xor ecx,ecx
+    xor edx,edx
+    xor esi,esi
+    xor edi,edi
+    
+printnum:
+    xor edx,edx         
+    div dword [const10]  
+    
+    cmp eax, 10
+    jge greater_than_10
+    jl less_than_10
+
+greater_than_10:
+    add edx, 48
+    mov [num3], edx
+    jmp next
+
+less_than_10:
+    cmp eax, 0
+    je printres
+    add edx, 48
+    mov [num2], edx
+    jmp next
+    
+next:    
+    cmp eax, 0
+    je printres
+    jmp printnum
+
+printres:
+    add edx, 48
+    mov [num1], edx
+    
     xor eax, eax
-    xor ebx, ebx
-    mov al, [num1]
-    sub al, 48
-    mov bl, [num2]
-    sub bl, 48
-
-    ; calculer la somme
-    add eax, ebx
-
-    ; convertir la somme en chaîne de caractères
-    xor ebx, ebx
-    mov bl, al
-    mov ecx, sum
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, num1
     mov edx, 1
-    mov [ecx], bl
-    mov eax, ecx
-    sub eax, 2
-    mov edx, 10
-    div edx
-    add dl, 48
-    mov [eax], dl
+    int 0x80
+    
     mov eax, 4
     mov ebx, 1
-    mov ecx, sum_msg
-    mov edx, 15
+    mov ecx, num2
+    mov edx, 1
     int 0x80
-
-    ; afficher la somme
+    
     mov eax, 4
     mov ebx, 1
-    mov ecx, sum
-    mov edx, 4
+    mov ecx, num3
+    mov edx, 1
     int 0x80
-
-    ; quitter le programme avec un code de retour 0
-    mov eax, 1
+    
+    
+    mov eax, 1 ; syscall pour terminer le programme
     xor ebx, ebx
     int 0x80

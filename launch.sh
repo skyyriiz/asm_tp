@@ -3,6 +3,6 @@ name="${PWD##*/}"
 
 nasm -f elf32 -g -o $name.o $name.s
 ld -m elf_i386 -o $name $name.o
-./$name 3 4
+./$name 42
 
 
