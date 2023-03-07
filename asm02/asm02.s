@@ -2,7 +2,7 @@ global _start
 
 section .data
     annonce db 'Entrez une valeur: ', 0
-    msg db "1337",10
+    msg db "1337", 0
 
 section .bss
     x resb 4
@@ -32,17 +32,17 @@ _start:
     int 0x80
 
     ; Check 1st char of our value and compare to the 1st of "42"
-    mov al, x[0]
+    mov al, [x]
     cmp al, '4'
     jne end
 
     ; Check 2nd char of our value and compare to the 2nd of "42"
-    mov bl, x[1]
+    mov bl, [x+1]
     cmp bl, '2'
     jne end
 
     ; Check 3rd char of our value and compare to the 3rd of "42"
-    mov cl, x[2]
+    mov cl, [x+2]
     cmp cl, 10
     jne end
 
